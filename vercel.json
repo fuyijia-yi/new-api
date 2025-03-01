@@ -1,0 +1,8 @@
+{
+  "buildCommand": "cd ./web && DISABLE_ESLINT_PLUGIN='true' VITE_REACT_APP_VERSION=$(cat VERSION) npm run build && cd .. && go build -o main ./...",
+  "installCommand": "cd ./web && npm install && cd .. && go mod tidy",
+  "env": {
+    "DISABLE_ESLINT_PLUGIN": "true",
+    "VITE_REACT_APP_VERSION": "your_version"
+  }
+}
