@@ -2,28 +2,26 @@
   "version": 2,
   "builds": [
     {
-      "src": "web/package.json", // 前端入口文件
-      "use": "@vercel/static-build", // 使用静态构建工具
+      "src": "web/package.json",
+      "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist", // 前端构建输出目录
-        "env": {
-          "DISABLE_ESLINT_PLUGIN": "true", // 禁用 ESLint 插件
-          "VITE_REACT_APP_VERSION": "@version" // 从 VERSION 文件读取版本号
-        }
+        "distDir": "web/dist",
+        "installCommand": "npm install",
+        "buildCommand": "DISABLE_ESLINT_PLUGIN='true' VITE_REACT_APP_VERSION=$(cat VERSION) npm run build"
       }
     },
     {
-      "src": "main.go", // 后端入口文件
-      "use": "@vercel/go" // 使用 Go 构建器
+      "src": "main.go",
+      "use": "@vercel/go"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)", // 将 /api/* 请求转发到后端
+      "src": "/api/(.*)",
       "dest": "main.go"
     },
     {
-      "src": "/(.*)", // 其他请求转发到前端
+      "src": "/(.*)",
       "dest": "web/dist/$1"
     }
   ]
