@@ -1,8 +1,30 @@
 {
-  "buildCommand": "cd ./web && DISABLE_ESLINT_PLUGIN='true' VITE_REACT_APP_VERSION=$(cat VERSION) npm run build && cd .. && go build -o main ./...",
-  "installCommand": "cd ./web && npm install && cd .. && go mod tidy",
-  "env": {
-    "DISABLE_ESLINT_PLUGIN": "true",
-    "VITE_REACT_APP_VERSION": "your_version"
-  }
+  "version": 2,
+  "builds": [
+    {
+      "src": "web/package.json", // 前端入口文件
+      "use": "@vercel/static-build", // 使用静态构建工具
+      "config": {
+        "distDir": "dist", // 前端构建输出目录
+        "env": {
+          "DISABLE_ESLINT_PLUGIN": "true", // 禁用 ESLint 插件
+          "VITE_REACT_APP_VERSION": "@version" // 从 VERSION 文件读取版本号
+        }
+      }
+    },
+    {
+      "src": "main.go", // 后端入口文件
+      "use": "@vercel/go" // 使用 Go 构建器
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)", // 将 /api/* 请求转发到后端
+      "dest": "main.go"
+    },
+    {
+      "src": "/(.*)", // 其他请求转发到前端
+      "dest": "web/dist/$1"
+    }
+  ]
 }
