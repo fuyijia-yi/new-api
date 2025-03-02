@@ -5,9 +5,8 @@
       "src": "web/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "web/dist",
-        "installCommand": "npm install",
-        "buildCommand": "DISABLE_ESLINT_PLUGIN='true' VITE_REACT_APP_VERSION=$(cat VERSION) npm run build"
+        "buildCommand": "cd web && npm install && DISABLE_ESLINT_PLUGIN='true' VITE_REACT_APP_VERSION=$(cat ../VERSION) npm run build",
+        "outputDirectory": "web/build"
       }
     },
     {
@@ -18,11 +17,14 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "main.go"
+      "dest": "/api/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "web/dist/$1"
+      "dest": "/web/build/$1"
     }
-  ]
+  ],
+  "env": {
+    "DISABLE_ESLINT_PLUGIN": "true"
+  }
 }
