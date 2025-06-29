@@ -410,7 +410,7 @@ const HeaderBar = () => {
   };
 
   return (
-    <header className="text-semi-color-text-0 sticky top-0 z-50 transition-colors duration-300 bg-white/75 dark:bg-zinc-900/75 backdrop-blur-lg">
+    <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700">
       <NoticeModal
         visible={noticeVisible}
         onClose={handleNoticeClose}
@@ -418,84 +418,50 @@ const HeaderBar = () => {
         defaultTab={unreadCount > 0 ? 'system' : 'inApp'}
         unreadKeys={getUnreadKeys()}
       />
-      <div className="w-full px-2">
+      <div className="w-full px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="md:hidden">
               <Button
                 icon={
                   isConsoleRoute
-                    ? (styleState.showSider ? <IconClose className="text-lg" /> : <IconMenu className="text-lg" />)
-                    : (mobileMenuOpen ? <IconClose className="text-lg" /> : <IconMenu className="text-lg" />)
-                }
-                aria-label={
-                  isConsoleRoute
-                    ? (styleState.showSider ? t('关闭侧边栏') : t('打开侧边栏'))
-                    : (mobileMenuOpen ? t('关闭菜单') : t('打开菜单'))
+                    ? (styleState.showSider ? <IconClose /> : <IconMenu />)
+                    : (mobileMenuOpen ? <IconClose /> : <IconMenu />)
                 }
                 onClick={() => {
                   if (isConsoleRoute) {
-                    // 控制侧边栏的显示/隐藏，无论是否移动设备
                     styleDispatch(styleActions.toggleSider());
                   } else {
-                    // 控制HeaderBar自己的移动菜单
                     setMobileMenuOpen(!mobileMenuOpen);
                   }
                 }}
                 theme="borderless"
                 type="tertiary"
-                className="!p-2 !text-current focus:!bg-semi-color-fill-1 dark:focus:!bg-gray-700"
+                className="!text-gray-600 dark:!text-gray-300"
               />
             </div>
-            <Link to="/" onClick={() => handleNavLinkClick('home')} className="flex items-center gap-2 group ml-2">
-              {isLoading ? (
-                <Skeleton.Image className="h-7 md:h-8 !rounded-full" style={{ width: 32, height: 32 }} />
-              ) : (
-                <img src={logo} alt="logo" className="h-7 md:h-8 transition-transform duration-300 ease-in-out group-hover:scale-105 rounded-full" />
-              )}
-              <div className="hidden md:flex items-center gap-2">
-                <div className="flex items-center gap-2">
-                  {isLoading ? (
-                    <Skeleton.Title style={{ width: 120, height: 24 }} />
-                  ) : (
-                    <Typography.Title heading={4} className="!text-lg !font-semibold !mb-0 
-                                                          bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-400 dark:to-purple-400
-                                                          bg-clip-text text-transparent">
-                      {systemName}
-                    </Typography.Title>
-                  )}
-                  {(isSelfUseMode || isDemoSiteMode) && !isLoading && (
-                    <Tag
-                      color={isSelfUseMode ? 'purple' : 'blue'}
-                      className="text-xs px-1.5 py-0.5 rounded whitespace-nowrap shadow-sm"
-                      size="small"
-                      shape='circle'
-                    >
-                      {isSelfUseMode ? t('自用模式') : t('演示站点')}
-                    </Tag>
-                  )}
-                </div>
-              </div>
+            <Link to="/" onClick={() => handleNavLinkClick('home')} className="flex items-center gap-3">
+              <img src={logo} alt="logo" className="h-8 w-8 rounded-full" />
+              <span className="text-xl font-semibold text-gray-800 dark:text-white">
+                {systemName}
+              </span>
             </Link>
-            {(isSelfUseMode || isDemoSiteMode) && !isLoading && (
-              <div className="md:hidden">
-                <Tag
-                  color={isSelfUseMode ? 'purple' : 'blue'}
-                  className="ml-2 text-xs px-1 py-0.5 rounded whitespace-nowrap shadow-sm"
-                  size="small"
-                  shape='circle'
-                >
-                  {isSelfUseMode ? t('自用模式') : t('演示站点')}
-                </Tag>
-              </div>
+            {(isSelfUseMode || isDemoSiteMode) && (
+              <Tag
+                color={isSelfUseMode ? 'purple' : 'blue'}
+                size="small"
+                className="ml-2"
+              >
+                {isSelfUseMode ? t('自用模式') : t('演示站点')}
+              </Tag>
             )}
-
-            <nav className="hidden md:flex items-center gap-1 lg:gap-2 ml-6">
-              {renderNavLinks(false, isLoading)}
-            </nav>
           </div>
 
-          <div className="flex items-center gap-2 md:gap-3">
+          <nav className="hidden md:flex items-center gap-4">
+            {renderNavLinks(false, isLoading)}
+          </nav>
+
+          <div className="flex items-center gap-3">
             {isNewYear && (
               <Dropdown
                 position="bottomRight"

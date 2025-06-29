@@ -322,108 +322,61 @@ const SiderBar = () => {
 
   return (
     <div
-      className="sidebar-container"
-      style={{ width: isCollapsed ? '60px' : '180px' }}
+      className="flex flex-col h-full bg-gray-50 dark:bg-gray-800 transition-all duration-300"
+      style={{ width: isCollapsed ? '80px' : '240px' }}
     >
       <Nav
-        className="sidebar-nav custom-sidebar-nav"
+        className="flex-grow overflow-y-auto"
         defaultIsCollapsed={styleState.siderCollapsed}
         isCollapsed={isCollapsed}
         onCollapseChange={(collapsed) => {
           setIsCollapsed(collapsed);
           styleDispatch(styleActions.setSiderCollapsed(collapsed));
-
-          // 确保在收起侧边栏时有选中的项目
-          if (selectedKeys.length === 0) {
-            const currentPath = location.pathname;
-            const matchingKey = Object.keys(routerMapState).find(
-              (key) => routerMapState[key] === currentPath,
-            );
-
-            if (matchingKey) {
-              setSelectedKeys([matchingKey]);
-            } else if (currentPath.startsWith('/console/chat/')) {
-              setSelectedKeys(['chat']);
-            } else {
-              setSelectedKeys(['detail']); // 默认选中首页
-            }
-          }
         }}
         selectedKeys={selectedKeys}
-        itemStyle="sidebar-nav-item"
-        hoverStyle="sidebar-nav-item:hover"
-        selectedStyle="sidebar-nav-item-selected"
         renderWrapper={({ itemElement, props }) => {
           const to = routerMapState[props.itemKey] || routerMap[props.itemKey];
-
-          // 如果没有路由，直接返回元素
           if (!to) return itemElement;
-
           return (
-            <Link
-              style={{ textDecoration: 'none' }}
-              to={to}
-            >
+            <Link style={{ textDecoration: 'none' }} to={to}>
               {itemElement}
             </Link>
           );
         }}
         onSelect={(key) => {
-          // 如果点击的是已经展开的子菜单的父项，则收起子菜单
           if (openedKeys.includes(key.itemKey)) {
             setOpenedKeys(openedKeys.filter((k) => k !== key.itemKey));
           }
-
           setSelectedKeys([key.itemKey]);
         }}
         openKeys={openedKeys}
         onOpenChange={(data) => {
           setOpenedKeys(data.openKeys);
         }}
+        items={[
+          { itemKey: 'chat', text: t('聊天'), icon: getLucideIcon('chat', selectedKeys.includes('chat')),
+            items: chatMenuItems.flatMap(item => item.items ? item.items.map(sub => ({itemKey: sub.itemKey, text: sub.text})) : [{itemKey: item.itemKey, text: item.text, icon: getLucideIcon(item.itemKey, selectedKeys.includes(item.itemKey))}] )
+          },
+          { itemKey: 'divider-1', text: '', type: 'divider' },
+          { itemKey: 'workspace', text: t('控制台'), icon: getLucideIcon('dashboard', selectedKeys.includes('dashboard')),
+            items: workspaceItems.filter(item => item.className !== 'tableHiddle').map(item => ({itemKey: item.itemKey, text: item.text, icon: getLucideIcon(item.itemKey, selectedKeys.includes(item.itemKey))}))
+          },
+          ...(isAdmin() ? [
+            { itemKey: 'divider-2', text: '', type: 'divider' },
+            { itemKey: 'admin', text: t('管理员'), icon: getLucideIcon('settings', selectedKeys.includes('admin')),
+              items: adminItems.filter(item => item.className !== 'tableHiddle').map(item => ({itemKey: item.itemKey, text: item.text, icon: getLucideIcon(item.itemKey, selectedKeys.includes(item.itemKey))}))
+            }
+          ] : []),
+          { itemKey: 'divider-3', text: '', type: 'divider' },
+          { itemKey: 'user-center', text: t('个人中心'), icon: getLucideIcon('user', selectedKeys.includes('user')),
+            items: financeItems.map(item => ({itemKey: item.itemKey, text: item.text, icon: getLucideIcon(item.itemKey, selectedKeys.includes(item.itemKey))}))
+          },
+        ]}
       >
-        {/* 聊天区域 */}
-        <div className="sidebar-section">
-          {!isCollapsed && (
-            <div className="sidebar-group-label">{t('聊天')}</div>
-          )}
-          {chatMenuItems.map((item) => renderSubItem(item))}
-        </div>
-
-        {/* 控制台区域 */}
-        <Divider className="sidebar-divider" />
-        <div>
-          {!isCollapsed && (
-            <div className="sidebar-group-label">{t('控制台')}</div>
-          )}
-          {workspaceItems.map((item) => renderNavItem(item))}
-        </div>
-
-        {/* 管理员区域 - 只在管理员时显示 */}
-        {isAdmin() && (
-          <>
-            <Divider className="sidebar-divider" />
-            <div>
-              {!isCollapsed && (
-                <div className="sidebar-group-label">{t('管理员')}</div>
-              )}
-              {adminItems.map((item) => renderNavItem(item))}
-            </div>
-          </>
-        )}
-
-        {/* 个人中心区域 */}
-        <Divider className="sidebar-divider" />
-        <div>
-          {!isCollapsed && (
-            <div className="sidebar-group-label">{t('个人中心')}</div>
-          )}
-          {financeItems.map((item) => renderNavItem(item))}
-        </div>
       </Nav>
 
-      {/* 底部折叠按钮 */}
       <div
-        className="sidebar-collapse-button"
+        className="flex items-center justify-center p-2 cursor-pointer border-t border-gray-200 dark:border-gray-700"
         onClick={() => {
           const newCollapsed = !isCollapsed;
           setIsCollapsed(newCollapsed);
@@ -431,13 +384,8 @@ const SiderBar = () => {
         }}
       >
         <Tooltip content={isCollapsed ? t('展开侧边栏') : t('收起侧边栏')} position="right">
-          <div className="sidebar-collapse-button-inner">
-            <span
-              className="sidebar-collapse-icon-container"
-              style={{ transform: isCollapsed ? 'rotate(180deg)' : 'rotate(0deg)' }}
-            >
-              <ChevronLeft size={16} strokeWidth={2.5} color="var(--semi-color-text-2)" />
-            </span>
+          <div className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+            <ChevronLeft size={20} className={`transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`} />
           </div>
         </Tooltip>
       </div>

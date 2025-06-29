@@ -15,14 +15,19 @@
 
 /* ==================== 全局基础样式 ==================== */
 body {
-  font-family: Lato, 'Helvetica Neue', Arial, Helvetica, 'Microsoft YaHei', sans-serif;
-  color: var(--semi-color-text-0);
-  background-color: var(--semi-color-bg-0);
+  font-family: 'Inter', 'Helvetica Neue', Arial, Helvetica, 'Microsoft YaHei', sans-serif;
+  color: theme('colors.gray.800');
+  background-color: theme('colors.gray.50');
+}
+
+body.dark {
+  color: theme('colors.gray.200');
+  background-color: theme('colors.gray.900');
 }
 
 code {
   font-family:
-    source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+    'Fira Code', Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 /* ==================== 布局相关样式 ==================== */
@@ -53,7 +58,7 @@ code {
 .semi-select,
 .semi-button,
 .semi-datepicker-range-input {
-  border-radius: 9999px !important;
+  border-radius: theme('borderRadius.xl') !important;
 }
 
 .semi-navigation-item {
@@ -82,121 +87,48 @@ code {
 }
 
 /* 自定义侧边栏样式 */
-.sidebar-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  transition: width 0.3s ease;
+.semi-nav-body {
+  padding: 8px;
 }
 
-.sidebar-nav {
-  flex: 1;
-  width: 100%;
-  background: var(--semi-color-bg-0);
-  height: 100%;
-  overflow: hidden;
-  border-right: none;
-  overflow-y: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+.semi-nav-item {
+  border-radius: theme('borderRadius.lg') !important;
+  margin-bottom: 4px !important;
 }
 
-.sidebar-nav::-webkit-scrollbar {
-  display: none;
+.semi-nav-item-selected {
+  background-color: theme('colors.primary') !important;
+  color: theme('colors.light') !important;
 }
 
-/* 侧边栏导航项样式 */
-.sidebar-nav-item {
-  border-radius: 6px;
-  margin: 3px 8px;
-  transition: all 0.15s ease;
-  padding: 8px 12px;
+.semi-nav-item-selected .semi-nav-item-text,
+.semi-nav-item-selected .semi-icon {
+  color: theme('colors.light') !important;
 }
 
-.sidebar-nav-item:hover {
-  background-color: rgba(var(--semi-blue-0), 0.08);
-  color: var(--semi-color-primary);
+.semi-nav-sub-title:hover,
+.semi-nav-item:not(.semi-nav-item-selected):hover {
+  background-color: theme('colors.gray.100') !important;
 }
 
-.sidebar-nav-item-selected {
-  background-color: rgba(var(--semi-blue-0), 0.12);
-  color: var(--semi-color-primary);
+.dark .semi-nav-item-selected {
+  background-color: theme('colors.primary') !important;
+}
+
+.dark .semi-nav-item:not(.semi-nav-item-selected):hover {
+  background-color: theme('colors.gray.700') !important;
+}
+
+.semi-nav-item-icon {
+  color: theme('colors.gray.500');
+}
+
+.dark .semi-nav-item-icon {
+  color: theme('colors.gray.400');
+}
+
+.semi-nav-item-text {
   font-weight: 500;
-}
-
-/* 图标容器样式 */
-.sidebar-icon-container {
-  width: 22px;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 10px;
-  transition: all 0.2s ease;
-}
-
-.sidebar-sub-icon-container {
-  width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 10px;
-  margin-left: 1px;
-  transition: all 0.2s ease;
-}
-
-/* 分割线样式 */
-.sidebar-divider {
-  margin: 4px 8px;
-  opacity: 0.15;
-}
-
-/* 分组标签样式 */
-.sidebar-group-label {
-  padding: 4px 15px 8px;
-  color: var(--semi-color-text-2);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  opacity: 0.8;
-}
-
-/* 底部折叠按钮 */
-.sidebar-collapse-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 12px;
-  cursor: pointer;
-  background-color: var(--semi-color-bg-0);
-  position: sticky;
-  bottom: 0;
-  z-index: 10;
-  box-shadow: 0 -10px 10px -5px var(--semi-color-bg-0);
-  backdrop-filter: blur(4px);
-  border-top: 1px solid rgba(var(--semi-grey-0), 0.08);
-}
-
-.sidebar-collapse-button-inner {
-  width: 28px;
-  height: 28px;
-  border-radius: 9999px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--semi-color-fill-0);
-  transition: all 0.2s ease;
-}
-
-.sidebar-collapse-icon-container {
-  display: inline-block;
-  transition: transform 0.3s ease;
-}
-
-/* 侧边栏区域容器 */
-.sidebar-section {
-  padding-top: 12px;
 }
 
 /* ==================== 聊天界面样式 ==================== */

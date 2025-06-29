@@ -63,11 +63,11 @@ export default defineConfig({
     host: '0.0.0.0',
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'https://yixian56-funac.hf.space',
         changeOrigin: true,
       },
       '/pg': {
-        target: 'http://localhost:3000',
+        target: 'https://yixian56-funac.hf.space',
         changeOrigin: true,
       },
     },
